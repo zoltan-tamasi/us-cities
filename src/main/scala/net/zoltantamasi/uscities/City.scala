@@ -70,12 +70,12 @@ object City {
     city.copy(
       closeCities = city.closeCities
         .map(closeCity => closeCity.copy(
-          distance = Some(haversine_distance(city.lng, city.lat, closeCity.lng, closeCity.lat).toInt)
+          distance = Some(haversineDistance(city.lng, city.lat, closeCity.lng, closeCity.lat).toInt)
         ))
     )
   }
 
-  def haversine_distance(longitude1: Double, latitude1: Double, longitude2: Double, latitude2: Double):Double = {
+  def haversineDistance(longitude1: Double, latitude1: Double, longitude2: Double, latitude2: Double):Double = {
     val R = 6372.8
     val dlat = math.toRadians(latitude2 - latitude1)
     val dlog = math.toRadians(longitude2 - longitude1)
