@@ -21,12 +21,14 @@ object City {
     while (closeCitiesCount < CLOSE_CITIES_MINIMUM_COUNT) {
       val lngIds = citiesLngMap
         .range(city.lng - (iteration * GRID_SIZE), city.lng + (iteration * GRID_SIZE))
-        .map({ case (_, city) => city.id })
+        .map({ case (_, closeCity) => closeCity.id })
+        .filter(id => id != city.id)
         .toList
 
       val latIds = citiesLatMap
         .range(city.lat - (iteration * GRID_SIZE), city.lat + (iteration * GRID_SIZE))
-        .map({ case (_, city) => city.id })
+        .map({ case (_, closeCity) => closeCity.id })
+        .filter(id => id != city.id)
         .toList
       
       closeCitiesIds = lngIds.intersect(latIds)
@@ -47,11 +49,13 @@ object City {
       val lngIds = lngOrdered
         .dropWhile(orderedCity => orderedCity.lng <= city.lng - (iteration * GRID_SIZE))
         .takeWhile(orderedCity => orderedCity.lng <= city.lng + (iteration * GRID_SIZE))
+        .filter(closeCity => closeCity.id != city.id)
         .map(_.id)
       
       val latIds = latOrdered
         .dropWhile(orderedCity => orderedCity.lat <= city.lat - (iteration * GRID_SIZE))
         .takeWhile(orderedCity => orderedCity.lat <= city.lat + (iteration * GRID_SIZE))
+        .filter(closeCity => closeCity.id != city.id)
         .map(_.id)
       
       closeCitiesIds = lngIds.intersect(latIds)
