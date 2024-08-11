@@ -27,30 +27,34 @@ object UsCities {
   def main(args: Array[String]): Unit = {
     
     val file = Source.fromFile(filename)
-    
-    var cities: List[City] = List[City]()
 
     var citiesIdMap: Map[Int, City] = Map[Int, City]()
     var citiesLatMap: TreeMap[Float, City] = TreeMap[Float, City]()
     var citiesLngMap: TreeMap[Float, City] = TreeMap[Float, City]()
 
-    for (line <- file.getLines().drop(1)) {
-     
-      val city = readCity(line);
-
-      city match {
-        case Success(city) =>
-
-          citiesIdMap = citiesIdMap.updated(city.id, city)
-          citiesLatMap = citiesLatMap.updated(city.lat, city)
-          citiesLngMap = citiesLngMap.updated(city.lng, city)
-    
-          cities = cities :+ city
-
-        case Failure(error) =>
-          println(s"Error reading line: $line \n Error is $error")
-      }
-    }
+    val cities: List[City] = 
+      file
+        .getLines()
+        .drop(1)
+        .map(line => {
+          val city = readCity(line);
+      
+          city match {
+            case Success(city) =>
+      
+              citiesIdMap = citiesIdMap.updated(city.id, city)
+              citiesLatMap = citiesLatMap.updated(city.lat, city)
+              citiesLngMap = citiesLngMap.updated(city.lng, city)
+        
+              Some(city)
+      
+            case Failure(error) =>
+              println(s"Error reading line: $line \n Error is $error")
+              None
+          }
+        })
+        .toList
+        .flatten
 
     //val lngOrdered = cities.sorted(CityLngOrdering)
     //val latOrdered = cities.sorted(CityLatOrdering)
