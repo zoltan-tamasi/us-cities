@@ -3,13 +3,12 @@ package net.zoltantamasi.uscities
 import upickle.default.{ReadWriter => RW, macroRW}
 import scala.collection.immutable.TreeMap
 
-
 object City {
 
   implicit val rw: RW[City] = macroRW
 
-  val GRID_SIZE: Float = 0.03f
-  val CLOSE_CITIES_MINIMUM_COUNT = 5
+  val GRID_SIZE: Float = scala.util.Properties.envOrElse("GRID_SIZE", "0.03").toFloat
+  val CLOSE_CITIES_MINIMUM_COUNT = scala.util.Properties.envOrElse("MIN_CITIES", "5").toInt
 
   def getCloseCitiesByMap(citiesLatMap: TreeMap[Float, City], citiesLngMap: TreeMap[Float, City], citiesIdMap: Map[Int, City], cityId: Int) = {
     
